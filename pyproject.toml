@@ -1,25 +1,15 @@
-[tool.poetry]
+[project]
 name = "nad"
 version = "0.1.0"
-description = ""
-authors = ["RodolfoFigueroa <4rodolfofigueroa2@gmail.com>"]
+description = "Add your description here"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-earthengine-api = "^1.4.1"
-ipykernel = "^6.29.5"
-geopandas = "^1.0.1"
-geemap = "^0.35.1"
-setuptools = "^75.6.0"
-geedim = "^1.9.1"
-osmnx = "^2.0.5"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=6.30.0",
+    "osmnx>=2.0.5",
+    "pandas-stubs>=2.3.0.250703",
+    "scipy>=1.16.1",
+]
 
 [tool.ruff.lint]
 select = ["ALL"]
