@@ -16,6 +16,7 @@ dependencies = [
     "pykrige>=1.7.2",
     "pca>=2.10.0",
     "scipy>=1.16.1",
+    "mapclassify>=2.10.0",
 ]
 
 [tool.ruff.lint]
