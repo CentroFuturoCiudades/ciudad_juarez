@@ -17,6 +17,9 @@ dependencies = [
     "pca>=2.10.0",
     "scipy>=1.16.1",
     "mapclassify>=2.10.0",
+    "xlrd>=2.0.2",
+    "photutils>=2.2.0",
+    "rasterio>=1.4.3",
 ]
 
 [tool.ruff.lint]
