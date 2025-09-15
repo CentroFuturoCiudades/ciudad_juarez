@@ -1,26 +1,26 @@
-import pandas as pd
 import geopandas as gpd
-import pandana as pdna
 import numpy as np
+import pandana as pdna
+import pandas as pd
 
 
 def create_network(gdf_vialidades, results_path, max_distance):
     gdf_edges = gdf_vialidades.explode(index_parts=False)
 
     gdf_edges["u_geom"] = gdf_edges.geometry.apply(lambda geom: geom.coords[0])
-    gdf_edges["v_geom"] = gdf_edges.geometry.apply(
-        lambda geom: geom.coords[-1])
+    gdf_edges["v_geom"] = gdf_edges.geometry.apply(lambda geom: geom.coords[-1])
 
     gdf_nodes = pd.DataFrame(
         pd.concat([gdf_edges["u_geom"], gdf_edges["v_geom"]])
         .drop_duplicates()
         .tolist(),
-        columns=["x", "y"]
+        columns=["x", "y"],
     ).reset_index(drop=True)
     gdf_nodes["node_id"] = gdf_nodes.index
 
     coord_to_id = {
-        (row.x, row.y): row.node_id for row in gdf_nodes.itertuples(index=False)}
+        (row.x, row.y): row.node_id for row in gdf_nodes.itertuples(index=False)
+    }
     gdf_edges["u"] = gdf_edges["u_geom"].map(coord_to_id)
     gdf_edges["v"] = gdf_edges["v_geom"].map(coord_to_id)
 
@@ -58,28 +58,25 @@ def get_proximities(
         .rename(columns={x: f"distance{x}" for x in range(1, num_pois + 1)})
         .reset_index(names="origin_id")
     )
-    return (
-        pd.wide_to_long(
-            res,
-            stubnames=["distance", "poi"],
-            i="origin_id",
-            j="num_poi",
-            sep="",
-        )
-        .rename(columns={"poi": "destination_id"})
-    )
+    return pd.wide_to_long(
+        res,
+        stubnames=["distance", "poi"],
+        i="origin_id",
+        j="num_poi",
+        sep="",
+    ).rename(columns={"poi": "destination_id"})
 
 
 def get_accessibility_metrics(
-        net: pdna.Network,
-        destinations: gpd.GeoDataFrame,
-        weights: pd.Series,
-        amenity: str,
-        max_distance: float,
-        num_pois: int,
-        walk_speed: float,
-        radius: float,
-        adjustment_factor: float
+    net: pdna.Network,
+    destinations: gpd.GeoDataFrame,
+    weights: pd.Series,
+    amenity: str,
+    max_distance: float,
+    num_pois: int,
+    walk_speed: float,
+    radius: float,
+    adjustment_factor: float,
 ):
     proximities = get_proximities(
         net,
@@ -88,16 +85,13 @@ def get_accessibility_metrics(
         max_distance=max_distance,
         num_pois=num_pois,
     )
-    proximities['time'] = (
-        proximities['distance'] / 1000) * 60 / walk_speed
+    proximities["time"] = (proximities["distance"] / 1000) * 60 / walk_speed
     proximities = proximities.join(weights, on="origin_id")
-    proximities = proximities.join(
-        destinations[['capacity']], on="destination_id")
-    proximities['gravity'] = 1 / \
-        np.exp(1 / (radius / adjustment_factor) *
-               proximities['distance'])
-    proximities['reach'] = proximities['gravity'] * \
-        proximities[weights.name]
+    proximities = proximities.join(destinations[["capacity"]], on="destination_id")
+    proximities["gravity"] = 1 / np.exp(
+        1 / (radius / adjustment_factor) * proximities["distance"],
+    )
+    proximities["reach"] = proximities["gravity"] * proximities[weights.name]
     destinations = (
         proximities.groupby("destination_id")
         .agg({"reach": "sum", "capacity": "first"})
