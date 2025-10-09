@@ -26,7 +26,7 @@ dependencies = [
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D"]
+ignore = ["D", "PLR2004"]
 
 [tool.basedpyright]
 typeCheckingMode = "standard"

@@ -211,3 +211,4 @@ pdf/
 *.geojson
 *.csv
 results*/
+*.json
