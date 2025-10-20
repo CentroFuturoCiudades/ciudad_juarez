@@ -153,7 +153,13 @@ def load_all_equipments(data_path: os.PathLike) -> pd.DataFrame:
             load_equip_df(data_path / "datos" / "Auditorios_Wgs84", name="auditorio"),
             load_equip_df(data_path / "datos" / "Bibliotecas", name="biblioteca"),
             load_equip_df(data_path / "datos" / "CinesWGS84", name="cine"),
-            load_equip_df(data_path / "datos" / "pparquesWgs84", name="parque", extra_cols=["CLASIFICAC"]).query("CLASIFICAC == 'PARQUE'").drop(columns=["CLASIFICAC"]),
+            load_equip_df(
+                data_path / "datos" / "pparquesWgs84",
+                name="parque",
+                extra_cols=["CLASIFICAC"],
+            )
+            .query("CLASIFICAC == 'PARQUE'")
+            .drop(columns=["CLASIFICAC"]),
             load_equip_df(
                 data_path / "datos" / "Uni_DeportivasWgs84",
                 name="unidad_deportiva",
