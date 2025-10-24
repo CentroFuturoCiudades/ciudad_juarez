@@ -33,14 +33,6 @@ def calculate_tdpa_exposure(
     results = {}
     for cve, group in df_temp.groupby("id"):
         close = group[group["distance_km"] <= threshold_km]
-
-        if not close.empty:
-            value = close["TDPA_mean"].sum() / threshold_km
-        else:
-            min_dist = group["distance_km"].min()
-            closest = group[group["distance_km"] == min_dist]
-            value = closest["TDPA_mean"].sum() / min_dist
-
-        results[cve] = value
+        results[cve] = close["TDPA_mean"].sum()
 
     return pd.Series(results)
