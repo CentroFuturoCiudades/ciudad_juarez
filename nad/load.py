@@ -101,17 +101,26 @@ def load_block_geometry(
     )
 
 
-def load_equip_df(path: os.PathLike, *, name: str, extra_cols=None) -> gpd.GeoDataFrame:
+def load_equip_df(
+    path: os.PathLike,
+    *,
+    name: str | None = None,
+    extra_cols: Iterable[str] | None = None,
+) -> gpd.GeoDataFrame:
     if extra_cols is None:
         extra_cols = []
 
-    return (
+    out = (
         gpd.read_file(path)
         .reset_index(drop=True)
-        .filter(["geometry"] + extra_cols)
+        .filter(["geometry", *extra_cols])
         .to_crs("EPSG:6372")
-        .assign(equipamiento=name)
     )
+
+    if name is not None:
+        out = out.assign(equipamiento=name)
+
+    return out
 
 
 def load_medical_equip_df(path: os.PathLike) -> pd.DataFrame:
