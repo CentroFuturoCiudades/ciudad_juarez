@@ -22,6 +22,8 @@ dependencies = [
     "rasterio>=1.4.3",
     "astropy>=7.1.0",
     "binsreg>=2.1.7",
+    "earthengine-api>=1.6.13",
+    "geemap>=0.36.5",
 ]
 
 [tool.ruff.lint]
