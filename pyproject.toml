@@ -33,3 +33,8 @@ ignore = ["D", "PLR2004"]
 [tool.basedpyright]
 typeCheckingMode = "standard"
 ignore = ["**/*.ipynb"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+]
