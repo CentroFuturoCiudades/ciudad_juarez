@@ -83,7 +83,7 @@ def get_accessibility_metrics(
     walk_speed: float,
     radius: float,
     adjustment_factor: float,
-):
+) -> pd.DataFrame:
     proximities = get_proximities(
         net,
         destinations.get_coordinates(),
